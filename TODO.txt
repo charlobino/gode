@@ -1,0 +1,14 @@
+============TODO============
+- addConnection function    [DONE]
+- deleteConnection function 
+- modifyConnection function 
+- addDatabase function      
+- deleteDatabase function   
+- getCollections function   
+- getDocuments function     
+- addCollection function    
+- deleteCollection function 
+- addDocument function      
+- deleteDocument function   
+- modifyDocument function   
+- cloneDocument function    
