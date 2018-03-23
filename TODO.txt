@@ -1,8 +1,9 @@
 ============TODO============
 - addConnection function    [DONE]
-- deleteConnection function 
-- modifyConnection function 
-- addDatabase function      
+- deleteConnection function [DONE]
+- modifyConnection function [DONE]
+- addDatabase function      [DONE]
+- getDatabase function
 - deleteDatabase function   
 - getCollections function   
 - getDocuments function     
