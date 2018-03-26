@@ -4,12 +4,15 @@
 - modifyConnection function [DONE]
 - addDatabase function      [DONE]
 - getDatabase function
-- deleteDatabase function   
-- getCollections function   
+- deleteDatabase function   [DONE]
+- getCollections function   [DONE]
 - getDocuments function     
-- addCollection function    
-- deleteCollection function 
-- addDocument function      
+- addCollection function    [DONE]
+- deleteCollection function [DONE]
+- addDocuments function     [DONE]
 - deleteDocument function   
 - modifyDocument function   
 - cloneDocument function    
+
+- find a better way to handle exceptions
+- replace where deprecated
