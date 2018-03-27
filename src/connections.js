@@ -10,6 +10,7 @@ var createConfig = (name, address, port) => {
     fs.writeFileSync(configFile, JSON.stringify({
         connections: [{ id: 1, name, address, port }]
     }));
+    fs.appendFileSync(logFile, `SUCCESS:${date}: connection #${1}(${name}) added \n`);
 };
 
 var addConnection = (name, address, port) => {
@@ -78,7 +79,7 @@ var createDatabase = (address, port, dbName, collectName) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(`ERROR:${date}: cant create database ${dbName} \n`);
+            fs.appendFileSync(logFile,`ERROR:${date}: cant create database ${dbName} \n`);
         } else {
             const db = client.db(dbName);
             db.collection(collectName).insertOne({}, (err, result) => {
@@ -98,7 +99,7 @@ var deleteDatabase = (address, port, dbName) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(`ERROR:${date}: cant connect to database ${dbName} \n`);
+            fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
             const db = client.db(dbName);
             db.dropDatabase((err, result) => {
@@ -120,8 +121,6 @@ var getCollections = (address, port, dbName) => {
         if (err) {
             fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
-            console.log(`SUCCESS:${date}: ${dbName}`);
-
             const db = client.db(dbName);
             db.listCollections().toArray(function(err, collInfos) {
                 console.log(collInfos);
@@ -139,9 +138,7 @@ var addCollection = (address, port, dbName, collName) => {
             fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
             fs.appendFileSync(logFile,`SUCCESS:${date}: collection ${collName} added \n`);
-
             const db = client.db(dbName);
-
             const coll = client.db(dbName).collection(collName);
             coll.insertOne({default:'value'});
         }
@@ -157,9 +154,7 @@ var deleteCollection = (address, port, dbName, collName) => {
             fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
             fs.appendFileSync(logFile,`SUCCESS:${date}: collection ${collName} deleted \n`);
-
             const db = client.db(dbName);
-
             const coll = client.db(dbName).collection(collName);
             coll.remove();
             coll.drop(); // Deprecated
@@ -178,7 +173,6 @@ var addDocuments = (address, port, dbName, collName, documents) => {
             fs.appendFileSync(logFile,`SUCCESS:${date}: ${documents} added \n`);
             var docObj = documents;
             const db = client.db(dbName);
-
             const coll = client.db(dbName).collection(collName);
             coll.insert(docObj);
         }
@@ -199,7 +193,6 @@ var deleteDocuments = (address, port, dbName, collName, documents) => {
             fs.appendFileSync(logFile,`SUCCESS:${date}: ${documents} deleted \n`);
             var docObj = documents;
             const db = client.db(dbName);
-
             const coll = client.db(dbName).collection(collName);
             coll.deleteMany(docObj);
         }
