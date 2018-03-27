@@ -10,7 +10,7 @@
 - addCollection function    [DONE]
 - deleteCollection function [DONE]
 - addDocuments function     [DONE]
-- deleteDocument function   
+- deleteDocument function   [DONE]
 - modifyDocument function   
 - cloneDocument function    
 
