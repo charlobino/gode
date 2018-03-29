@@ -9,21 +9,21 @@ var date = new Date().toString();
 var createConfig = (name, address, port) => {
     fs.writeFileSync(configFile, JSON.stringify({
         connections: [{ id: 1, name, address, port }]
-    }));
+    }, null, 4));
     fs.appendFileSync(logFile, `SUCCESS:${date}: connection #${1}(${name}) added \n`);
 };
 
 var addConnection = (name, address, port) => {
     if (fs.existsSync(configFile)) {
         var connObj = JSON.parse(fs.readFileSync(configFile));
-        var nextId = connObj.connections[connObj.connections.length - 1].id+1;
+        var nextId = connObj.connections[connObj.connections.length - 1].id + 1;
         connObj.connections.push({
             id: nextId,
             name: name,
             address: address,
             port: port
         });
-        fs.writeFileSync(configFile, JSON.stringify(connObj));
+        fs.writeFileSync(configFile, JSON.stringify(connObj, null, 4));
         fs.appendFileSync(logFile, `SUCCESS:${date}: connection #${nextId}(${name}) added \n`);
     } else { createConfig(name, address, port); }
 };
@@ -39,7 +39,7 @@ var modifyConnection = (id, newName, newAddress, newPort) => {
             fs.appendFileSync(logFile, `SUCCESS:${date}: connection #${element.id}(${element.name}) modified \n`);
         }
     });
-    fs.writeFileSync(configFile, JSON.stringify(connObj));
+    fs.writeFileSync(configFile, JSON.stringify(connObj, null, 4));
 };
 //modifyConnection(2, 'HomeConnection', '127.0.0.1','3000');
 
@@ -51,7 +51,7 @@ var deleteConnection = (id) => {
             fs.appendFileSync(logFile, `SUCCESS:${date}: connection #${element.id}(${element.name}) deleted \n`);
         }
     });
-    fs.writeFileSync(configFile, JSON.stringify(connObj));
+    fs.writeFileSync(configFile, JSON.stringify(connObj, null, 4));
 };
 //deleteConnection(5);
 
@@ -79,14 +79,14 @@ var createDatabase = (address, port, dbName, collectName) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(logFile,`ERROR:${date}: cant create database ${dbName} \n`);
+            fs.appendFileSync(logFile, `ERROR:${date}: cant create database ${dbName} \n`);
         } else {
             const db = client.db(dbName);
             db.collection(collectName).insertOne({}, (err, result) => {
                 if (err) {
-                    fs.appendFileSync(logFile,`ERROR:${date}: cant create collection ${collectName} \n`);
+                    fs.appendFileSync(logFile, `ERROR:${date}: cant create collection ${collectName} \n`);
                 } else {
-                    fs.appendFileSync(logFile,`SUCCESS:${date}: database ${dbName} created \n`);
+                    fs.appendFileSync(logFile, `SUCCESS:${date}: database ${dbName} created \n`);
                 }
             });
         }
@@ -99,14 +99,14 @@ var deleteDatabase = (address, port, dbName) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
+            fs.appendFileSync(logFile, `ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
             const db = client.db(dbName);
             db.dropDatabase((err, result) => {
                 if (err) {
-                    fs.appendFileSync(logFile,`ERROR:${date}: cant delete database ${dbName} \n`);
+                    fs.appendFileSync(logFile, `ERROR:${date}: cant delete database ${dbName} \n`);
                 } else {
-                    fs.appendFileSync(logFile,`SUCCESS:${date}: database ${dbName} deleted \n`);
+                    fs.appendFileSync(logFile, `SUCCESS:${date}: database ${dbName} deleted \n`);
                 }
             });
         }
@@ -119,10 +119,10 @@ var getCollections = (address, port, dbName) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
+            fs.appendFileSync(logFile, `ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
             const db = client.db(dbName);
-            db.listCollections().toArray(function(err, collInfos) {
+            db.listCollections().toArray(function (err, collInfos) {
                 console.log(collInfos);
             });
         }
@@ -135,25 +135,25 @@ var addCollection = (address, port, dbName, collName) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
+            fs.appendFileSync(logFile, `ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
-            fs.appendFileSync(logFile,`SUCCESS:${date}: collection ${collName} added \n`);
+            fs.appendFileSync(logFile, `SUCCESS:${date}: collection ${collName} added \n`);
             const db = client.db(dbName);
             const coll = client.db(dbName).collection(collName);
-            coll.insertOne({default:'value'});
+            coll.insertOne({});
         }
         client.close();
     });
 };
-//addCollection('localhost', '27017','TodoApp','TestColl');
+//addCollection('localhost', '27017', 'TestDB', 'TestColl');
 
 var deleteCollection = (address, port, dbName, collName) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
+            fs.appendFileSync(logFile, `ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
-            fs.appendFileSync(logFile,`SUCCESS:${date}: collection ${collName} deleted \n`);
+            fs.appendFileSync(logFile, `SUCCESS:${date}: collection ${collName} deleted \n`);
             const db = client.db(dbName);
             const coll = client.db(dbName).collection(collName);
             coll.remove();
@@ -162,24 +162,23 @@ var deleteCollection = (address, port, dbName, collName) => {
         client.close();
     });
 };
-//deleteCollection('localhost', '27017','TodoApp','TestColl');
+//deleteCollection('localhost', '27017','TestDB','TestColl');
 
 var addDocuments = (address, port, dbName, collName, documents) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
+            fs.appendFileSync(logFile, `ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
-            fs.appendFileSync(logFile,`SUCCESS:${date}: ${documents} added \n`);
-            var docObj = documents;
+            fs.appendFileSync(logFile, `SUCCESS:${date}: ${documents} added \n`);
             const db = client.db(dbName);
             const coll = client.db(dbName).collection(collName);
-            coll.insert(docObj);
+            coll.insert(documents);
         }
         client.close();
     });
 };
-// addDocuments('localhost', '27017','TodoApp','TestColl',{
+// addDocuments('localhost', '27017','TestDB','TestColl',{
 //     this:'is',
 //     a:'document to delete'
 // });
@@ -188,18 +187,47 @@ var deleteDocuments = (address, port, dbName, collName, documents) => {
     var url = `mongodb://${address}:${port}/${dbName}`;
     MongoClient.connect(url, (err, client) => {
         if (err) {
-            fs.appendFileSync(logFile,`ERROR:${date}: cant connect to database ${dbName} \n`);
+            fs.appendFileSync(logFile, `ERROR:${date}: cant connect to database ${dbName} \n`);
         } else {
-            fs.appendFileSync(logFile,`SUCCESS:${date}: ${documents} deleted \n`);
-            var docObj = documents;
+            fs.appendFileSync(logFile, `SUCCESS:${date}: ${documents} deleted \n`);
             const db = client.db(dbName);
             const coll = client.db(dbName).collection(collName);
-            coll.deleteMany(docObj);
+            coll.deleteMany(documents);
         }
         client.close();
     });
 };
-// deleteDocuments('localhost', '27017','TodoApp','TestColl',{
+// deleteDocuments('localhost', '27017','TestDB','TestColl',{
 //     this:'is',
 //     a:'document to delete'
 // });
+
+var modifyDocuments = (address, port, dbName, collName, documents, newDoc) => {
+    var url = `mongodb://${address}:${port}/${dbName}`;
+    MongoClient.connect(url, (err, client) => {
+        if (err) {
+            fs.appendFileSync(logFile, `ERROR:${date}: cant connect to database ${dbName} \n`);
+        } else {
+            fs.appendFileSync(logFile, `SUCCESS:${date}: ${documents} deleted \n`);
+            const db = client.db(dbName);
+            const coll = client.db(dbName).collection(collName);
+            // ...
+        }
+        client.close();
+    });
+};
+
+var cloneDocuments = (address, port, dbName, collName, documents, nbClone) => {
+    var url = `mongodb://${address}:${port}/${dbName}`;
+    MongoClient.connect(url, (err, client) => {
+        if (err) {
+            fs.appendFileSync(logFile, `ERROR:${date}: cant connect to database ${dbName} \n`);
+        } else {
+            fs.appendFileSync(logFile, `SUCCESS:${date}: ${documents} deleted \n`);
+            const db = client.db(dbName);
+            const coll = client.db(dbName).collection(collName);
+            // ...
+        }
+        client.close();
+    });
+};
