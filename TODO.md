@@ -4,15 +4,17 @@
 - ~~deleteConnection~~
 - ~~modifyConnection~~
 - ~~addDatabase~~
-- getDatabase 
+- getDatabases 
 - ~~deleteDatabase~~ 
 - ~~getCollections~~ 
-- getDocuments
+- ~~getDocuments~~
 - ~~addCollection~~ 
 - ~~deleteCollection~~ 
 - ~~addDocuments~~ 
-- ~~deleteDocument~~ 
-- modifyDocument
+- ~~deleteManyDocs~~ 
+- ~~deleteOneDoc~~ 
+- ~~updateOneDoc~~
+- ~~updateManyDocs~~
 - cloneDocument
 
 
